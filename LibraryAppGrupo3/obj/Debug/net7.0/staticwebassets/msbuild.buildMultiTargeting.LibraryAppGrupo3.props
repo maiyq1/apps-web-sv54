@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\LibraryAppGrupo3.props" />
+</Project>
