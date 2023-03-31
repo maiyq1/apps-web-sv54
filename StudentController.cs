@@ -40,18 +40,27 @@ namespace API.Controllers
         [HttpPost]
         public IActionResult Post([FromBody] Student student)
         {
-            if (student.Name == "")
-                return StatusCode(400);
-            else
-                return StatusCode(201);
+            if (student == null)
+            {
+            return BadRequest(400);
         }
 
+            if (Students.Any(s => s.Id == student.Id))
+        {
+            return Conflict("Ya existe un estudiante con el ID proporcionado.");
+        }
+
+        Students.Add(student);
+        return CreatedAtRoute("GetById", new { id = student.Id }, student);
+        }
+
+
         // PUT: api/Student/5
-[HttpPut("{id}")]
-public IActionResult Put(int id, [FromBody] Student student)
-{
-    try
-    {
+        [HttpPut("{id}")]
+        public IActionResult Put(int id, [FromBody] Student student)
+        {
+           try
+        {
         var existingStudent = Students.FirstOrDefault(s => s.Id == id);
         if (existingStudent == null)
         {
@@ -69,11 +78,11 @@ public IActionResult Put(int id, [FromBody] Student student)
                 existingStudent.Name = student.Name;
                 existingStudent.LastName = student.LastName;
                 return Ok(200); // OK
-            }
+                  }
+              }
         }
-    }
-    catch (Exception e)
-    {
+        catch (Exception e)
+        {
         return StatusCode(500); // Internal Server Error
     }
 }
