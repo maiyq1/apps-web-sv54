@@ -63,10 +63,21 @@ namespace API.Controllers
             }
         }
 
-        // DELETE: api/Student/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+      // DELETE: api/Student/5
+[HttpDelete("{id}")]
+public IActionResult Delete(int id)
+{
+    var student = Students.FirstOrDefault(s => s.Id == id);
+    if (student == null)
+    {
+        return NotFound(404); 
+    }
+    else
+    {
+        Students.Remove(student);
+        return Accepted(202);
+    }
+}
+
     }
 }
