@@ -47,21 +47,37 @@ namespace API.Controllers
         }
 
         // PUT: api/Student/5
-        [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] Student student)
+[HttpPut("{id}")]
+public IActionResult Put(int id, [FromBody] Student student)
+{
+    try
+    {
+        var existingStudent = Students.FirstOrDefault(s => s.Id == id);
+        if (existingStudent == null)
         {
-            try
+            return NotFound(404); // Not Found
+        }
+        else
+        {
+            if (student.Id == 0)
             {
-                if (student.Id == 0)
-                    return StatusCode(400);
-                else
-                    return StatusCode(201);
+                return BadRequest(400); // Bad Request
             }
-            catch (Exception e)
+            else
             {
-                return StatusCode(500);
+                existingStudent.Id = student.Id;
+                existingStudent.Name = student.Name;
+                existingStudent.LastName = student.LastName;
+                return Ok(200); // OK
             }
         }
+    }
+    catch (Exception e)
+    {
+        return StatusCode(500); // Internal Server Error
+    }
+}
+
 
       // DELETE: api/Student/5
 [HttpDelete("{id}")]
